@@ -1,0 +1,15 @@
+POST http://localhost:3001/api/phones
+Content-Type: application/json
+
+{
+    "name" : "Rop",
+    "number" :"555555555"
+}
+
+###
+
+
+GET http://localhost:3001/api/phones
+
+###
+DELETE http://localhost:3001/api/phones/10

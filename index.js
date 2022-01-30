@@ -63,9 +63,13 @@ const generateId = () => {
 app.post("/api/phones", (request, response) => {
   const body = request.body;
 
-  if (!body.name && !body.number) {
+  if (!body.name || !body.number) {
     return response.status(400).json({
       error: "Content missing",
+    });
+  } else if (numbers.find((num) => num.name === body.name)) {
+    return response.status(400).json({
+      error: "Name must be unique",
     });
   }
 
