@@ -1,9 +1,26 @@
 const { response } = require("express");
 const express = require("express");
-
+var morgan = require("morgan");
 const app = express();
 
 app.use(express.json());
+
+app.use(morgan("combined"));
+
+// request logger middleware is used before requets
+// const requestLogger = (request, response, next) => {
+//   console.log("Method", request.method);
+//   console.log("Path", request.path);
+//   console.log("Body", request.body);
+//   console.log("...");
+
+//   next();
+// };
+// app.use(requestLogger);
+
+morgan(function (req, res) {
+  return [tokens.req.body];
+});
 
 let numbers = [
   {
@@ -27,9 +44,7 @@ let numbers = [
     number: "39-23-6423122",
   },
 ];
-
 const poeple = numbers.length;
-
 app.get("/api/phones", (request, response) => {
   response.json(numbers);
 });
@@ -73,8 +88,6 @@ app.post("/api/phones", (request, response) => {
     });
   }
 
-  console.log(generateId());
-
   const phone = {
     name: body.name,
     number: body.number,
@@ -85,7 +98,15 @@ app.post("/api/phones", (request, response) => {
   response.json(phone);
 });
 
-const PORT = 3001;
+// unknownEndpoint middleware is used after all the requests
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: "unknown endpoint" });
+};
+
+app.use(unknownEndpoint);
+
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Application running on port ${PORT}`);
 });
