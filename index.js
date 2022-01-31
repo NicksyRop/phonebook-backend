@@ -49,6 +49,10 @@ app.get("/api/phones", (request, response) => {
   response.json(numbers);
 });
 
+app.get("/", (req, res) => {
+  res.end("<h1>Hello world</h1>");
+});
+
 app.get("/info", (request, response) => {
   response.end(` Phonebook has info of ${poeple}  people ${new Date()} `);
 });
