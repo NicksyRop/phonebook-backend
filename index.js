@@ -4,8 +4,11 @@ var morgan = require("morgan");
 const app = express();
 
 app.use(express.json());
+const cors = require("cors");
 
-app.use(morgan("combined"));
+app.use(cors());
+
+app.use(express.static("build"));
 
 // request logger middleware is used before requets
 // const requestLogger = (request, response, next) => {
