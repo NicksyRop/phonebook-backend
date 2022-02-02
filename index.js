@@ -1,111 +1,42 @@
-const { response } = require("express");
+require("dotenv").config();
 const express = require("express");
-var morgan = require("morgan");
 const app = express();
 
-app.use(express.json());
 const cors = require("cors");
-
 app.use(cors());
 
 app.use(express.static("build"));
+app.use(express.json());
 
-// request logger middleware is used before requets
-// const requestLogger = (request, response, next) => {
-//   console.log("Method", request.method);
-//   console.log("Path", request.path);
-//   console.log("Body", request.body);
-//   console.log("...");
+const Number = require("./models/number.js");
 
-//   next();
-// };
-// app.use(requestLogger);
-
-morgan(function (req, res) {
-  return [tokens.req.body];
+app.get("/api/phones", (req, res) => {
+  Number.find({}).then((numbers) => res.json(numbers));
 });
-
-let numbers = [
-  {
-    id: 1,
-    name: "Arto Hellas",
-    number: "040-123456",
-  },
-  {
-    id: 2,
-    name: "Ada Lovelace",
-    number: "39-44-5323523",
-  },
-  {
-    id: 3,
-    name: "Dan Abramov",
-    number: "12-43-234345",
-  },
-  {
-    id: 4,
-    name: "Mary Poppendieck",
-    number: "39-23-6423122",
-  },
-];
-const poeple = numbers.length;
-app.get("/api/phones", (request, response) => {
-  response.json(numbers);
-});
-
-app.get("/", (req, res) => {
-  res.end("<h1>Hello world</h1>");
-});
-
-app.get("/info", (request, response) => {
-  response.end(` Phonebook has info of ${poeple}  people ${new Date()} `);
-});
-
-app.delete("/api/phones/:id", (request, response) => {
-  const id = Number(request.params.id);
-
-  const phone = numbers.find((phone) => phone.id === id);
-
-  console.log(phone);
-
-  if (!phone) {
-    return response.status(404).json({
-      error: "Not found",
-    });
-  }
-  numbers = numbers.filter((number) => number.id !== id);
-  response.status(204).end();
-});
-
-const generateId = () => {
-  const MaxId =
-    numbers.length > 0 ? Math.max(...numbers.map((phone) => phone.id)) : 0;
-  return MaxId + 1;
-};
 
 app.post("/api/phones", (request, response) => {
   const body = request.body;
 
-  if (!body.name || !body.number) {
-    return response.status(400).json({
-      error: "Content missing",
-    });
-  } else if (numbers.find((num) => num.name === body.name)) {
-    return response.status(400).json({
-      error: "Name must be unique",
-    });
+  if (body.name === undefined || body.phone === undefined) {
+    return response.status(400).json({ error: "content missing" });
   }
 
-  const phone = {
+  const phone = new Number({
     name: body.name,
-    number: body.number,
-    id: generateId(),
-  };
+    number: body.phone,
+  });
 
-  numbers = numbers.concat(phone);
-  response.json(phone);
+  console.log(phone);
+
+  phone.save().then((savedNote) => {
+    response.json(savedNote);
+  });
 });
-
-// unknownEndpoint middleware is used after all the requests
+app.get("/api/phones/:id", (req, res) => {
+  Number.findById(request.params.id).then((number) => {
+    res.json(number);
+  });
+});
 
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: "unknown endpoint" });
@@ -113,7 +44,7 @@ const unknownEndpoint = (request, response) => {
 
 app.use(unknownEndpoint);
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
-  console.log(`Application running on port ${PORT}`);
+  console.log(`Application running on http://localhost:${PORT}`);
 });
