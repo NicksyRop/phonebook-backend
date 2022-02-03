@@ -1,15 +1,15 @@
-post http://localhost:3000/api/numbers
+post http://localhost:3001/api/phones
 Content-Type: application/json
 
 {
-    "name" : "Ropsfffy",
-    "number" :5555555556666
+    "name" : "Rssv",
+    "phone" :55666666
 }
 
 ###
 
 
-GET http://localhost:3000/api/numbers
+GET http://localhost:3001/api/phones
 
 ###
-DELETE http://localhost:3000/api/numbers/61fabd2347d4237ed9f5fa45
+DELETE http://localhost:3001/api/phones/61fabd2347d4237ed9f5fa45
