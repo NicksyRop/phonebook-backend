@@ -9,7 +9,7 @@ Content-Type: application/json
 ###
 
 
-GET http://localhost:3001/api/phones
+GET http://localhost:3001/api/phones/61fae7e9cb5f2a0af6b3ee
 
 ###
-DELETE http://localhost:3001/api/phones/61fabd2347d4237ed9f5fa45
+DELETE http://localhost:3001/api/phones/61fae7e9cb5f2a0af6b3eef0
